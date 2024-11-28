@@ -19,13 +19,13 @@ public class PagamentoController {
         useCase.gerarPagamento(eventToDomain(event));
     }
 
+    private Pagamento eventToDomain(PedidoCriadoEvent event) {
+        return new Pagamento(event.getIdPedido(), event.getValorTotal());
+    }
+
     public void atualizarStatusDoPagamento(PagamentoDTO pagamentoDTO, PagamentoRepositorioAdaptador repositorio, PagamentoSender sender) {
         AtualizarStatusPagamentoPedidoUseCase useCase = new AtualizarStatusPagamentoPedidoUseCase(new PagamentoGatewayMongo(repositorio), sender);
         useCase.atualizarStatusPagamento(pagamentoDTO.getIdPedido(), pagamentoDTO.isAprovado());
-    }
-
-    private Pagamento eventToDomain(PedidoCriadoEvent event) {
-        return new Pagamento(event.getIdPedido(), event.getValorTotal());
     }
 
     public String buscarStatusPagamentoPedido(String idPedido, PagamentoRepositorioImpl pagamentoRepositorio) {

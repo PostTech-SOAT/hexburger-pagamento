@@ -22,7 +22,10 @@ public class PagamentoRepositorioImpl implements PagamentoRepositorioAdaptador {
 
     @Override
     public void atualizarStatusPagamento(String idPedido, StatusPagamento status) {
-        repository.atualizarStatusPagamento(idPedido, status.name());
+        repository.findById(idPedido).ifPresent(pagamento -> {
+            pagamento.setStatus(status.name());
+            repository.save(pagamento);
+        });
     }
 
     @Override

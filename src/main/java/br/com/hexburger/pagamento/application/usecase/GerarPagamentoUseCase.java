@@ -16,7 +16,7 @@ public class GerarPagamentoUseCase {
     }
 
     public void gerarPagamento(Pagamento pagamento) {
-        PagamentoResponse pagamentoResponse = mercadoPagoGateway.gerarPagamento(pagamento.getId(), pagamento.getValorTotal());
+        PagamentoResponse pagamentoResponse = mercadoPagoGateway.gerarPagamento(pagamento.getIdPedido(), pagamento.getValorTotal());
         pagamento.setInformacoesPagamento(pagamentoResponse.getQrCode(), pagamentoResponse.getIdExterno());
         pagamentoGateway.persistirPagamento(pagamento);
     }
