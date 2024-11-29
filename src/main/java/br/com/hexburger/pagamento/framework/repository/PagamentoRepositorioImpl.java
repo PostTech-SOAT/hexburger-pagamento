@@ -30,7 +30,8 @@ public class PagamentoRepositorioImpl implements PagamentoRepositorioAdaptador {
 
     @Override
     public Optional<String> buscarStatusPorPedido(String idPedido) {
-        return repository.findStatusByIdPedido(idPedido);
+        return repository.findStatusByIdPedido(idPedido)
+                .map(EPagamento::getStatus);
     }
 
 }

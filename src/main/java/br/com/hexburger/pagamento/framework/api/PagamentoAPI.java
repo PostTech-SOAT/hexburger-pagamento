@@ -1,5 +1,6 @@
 package br.com.hexburger.pagamento.framework.api;
 
+import br.com.hexburger.pagamento.application.exception.ResourceNotFoundException;
 import br.com.hexburger.pagamento.framework.rabbitmq.PagamentoSenderService;
 import br.com.hexburger.pagamento.framework.repository.PagamentoRepositorioImpl;
 import br.com.hexburger.pagamento.interfaceadapters.controller.PagamentoController;
@@ -23,15 +24,23 @@ public class PagamentoAPI {
     @PostMapping
     public ResponseEntity<Object> atualizarStatusDoPagamento(@RequestBody PagamentoDTO pagamentoDTO) {
         PagamentoController controller = new PagamentoController();
-        controller.atualizarStatusDoPagamento(pagamentoDTO, pagamentoRepositorio, pagamentoSenderService);
-        return ResponseEntity.accepted().build();
+        try {
+            controller.atualizarStatusDoPagamento(pagamentoDTO, pagamentoRepositorio, pagamentoSenderService);
+            return ResponseEntity.accepted().build();
+        } catch (NullPointerException | IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @GetMapping("/{idPedido}/status")
     @Operation(summary = "Buscar status de pagamento do pedido")
     public ResponseEntity<String> buscarStatusPagamentoPedido(@PathVariable @Parameter(description = "ID do pedido", required = true, schema = @Schema(type = "string", example = "877e03ba-eef1-4c49-9dc5-d3cc480426c8")) String idPedido) {
         PagamentoController controller = new PagamentoController();
-        return ResponseEntity.ok(controller.buscarStatusPagamentoPedido(idPedido, pagamentoRepositorio));
+        try {
+            return ResponseEntity.ok(controller.buscarStatusPagamentoPedido(idPedido, pagamentoRepositorio));
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
 }
