@@ -1,0 +1,34 @@
+name: SonarQube - Quality Gate
+description: Check the quality gate status of a SonarQube project
+inputs:
+  sonarqube_url:
+    description: "URL of the SonarQube server"
+    required: true
+  sonarqube_project_key:
+    description: "Project key of the SonarQube project"
+    required: true
+  sonarqube_token:
+    description: "Token for authenticating with the SonarQube server"
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/checkout@v3
+    - uses: sonarsource/sonarcloud-github-action@master
+      with:
+        projectBaseDir: .
+        token: ${{ inputs.sonarqube_token }}
+    - name: Get Quality Gate status
+      run: |
+        curl -s -u "${{ inputs.sonarqube_token }}:" "${{ inputs.sonarqube_url }}/api/qualitygates/project_status?projectKey=${{ inputs.sonarqube_project_key }}" > sonarqube-quality-gate.json
+        jq -r '.projectStatus.status' sonarqube-quality-gate.json > sonarqube-quality-gate-status.txt
+      shell: bash
+    - name: Check Quality Gate status
+      run: |
+        status=$(<sonarqube-quality-gate-status.txt)
+        if [ "$status" != "OK" ]; then
+          echo "Quality Gate status is not OK: $status"
+          exit 1
+        fi
+      shell: bash
