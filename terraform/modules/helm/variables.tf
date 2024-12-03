@@ -5,4 +5,3 @@ variable "ingress_config_host" {}
 variable "config_map_name" {}
 variable "secret_name" {}
 variable "secret_env_values" {}
-variable "ingress_config_host_path" {}
