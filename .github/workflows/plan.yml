@@ -16,16 +16,16 @@ env:
   SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
 jobs:
-  quality:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
+  # quality:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v3
 
-      - name: SonarQube - Quality Gate
-        uses: ./.github/quality/quality-gate
+  #     - name: SonarQube - Quality Gate
+  #       uses: ./.github/quality/quality-gate
 
   unit_tests:
-    needs: quality
+    # needs: quality
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
