@@ -6,11 +6,14 @@ on:
 env:
   aws_region: us-east-1
   terraform_version: 1.6.5
-  terraform_directory: ./infra/terraform
+  terraform_directory: ./terraform
   terragrunt_version: 0.67.10
   tfvars_file_name: deploy.hcl
   pr_number: ${{ github.event.number }}
   eks_cluster_name: hexburger-eks-cluster
+  ECR_REPOSITORY: hexburger-pagamento
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+  SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
 jobs:
   quality:
@@ -18,12 +21,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Quality Gate
+      - name: SonarQube - Quality Gate
         uses: ./.github/quality/quality-gate
-        with:
-          sonarqube_url: ${{ secrets.SONARQUBE_URL }}
-          sonarqube_project_key: ${{ secrets.SONARQUBE_PROJECT_KEY }}
-          sonarqube_token: ${{ secrets.SONARQUBE_TOKEN }}
 
   unit_tests:
     needs: quality

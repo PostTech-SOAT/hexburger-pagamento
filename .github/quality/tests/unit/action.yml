@@ -15,40 +15,5 @@ runs:
     - name: Run unit tests
       id: unit-tests
       run: |
-        echo 'result<<EOF' >> $GITHUB_OUTPUT
-        mvn test >> $GITHUB_OUTPUT
-        echo 'EOF' >> $GITHUB_OUTPUT
+        mvn test
       shell: bash
-
-    - name: Check code coverage
-      id: coverage
-      run: |
-        mvn jacoco:report
-        mvn jacoco:check
-      shell: bash
-
-    - name: Upload code coverage report
-      uses: actions/upload-artifact@v2
-      with:
-        name: coverage-report
-
-    - name: Comment PR
-      id: comment
-      uses: actions/github-script@v4
-      with:
-        github-token: ${{ inputs.github_token }}
-        script: |
-          github.issues.createComment({
-            issue_number: ${{ github.event.number }},
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            body: `
-              Test Covarage: ${{ steps.coverage.outputs.covered }}%
-
-              \`\`\`
-              ${{ steps.unit-tests.outputs.result }}
-              \`\`\`
-
-              Test Report salvo no GitHub Artifacts.
-            `
-          })

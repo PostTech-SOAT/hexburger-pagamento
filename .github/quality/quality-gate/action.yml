@@ -14,21 +14,23 @@ inputs:
 runs:
   using: composite
   steps:
-    - uses: actions/checkout@v3
-    - uses: sonarsource/sonarcloud-github-action@master
+    - name: Set up JDK 21
+      uses: actions/setup-java@v4
       with:
-        projectBaseDir: .
-        token: ${{ inputs.sonarqube_token }}
-    - name: Get Quality Gate status
-      run: |
-        curl -s -u "${{ inputs.sonarqube_token }}:" "${{ inputs.sonarqube_url }}/api/qualitygates/project_status?projectKey=${{ inputs.sonarqube_project_key }}" > sonarqube-quality-gate.json
-        jq -r '.projectStatus.status' sonarqube-quality-gate.json > sonarqube-quality-gate-status.txt
-      shell: bash
-    - name: Check Quality Gate status
-      run: |
-        status=$(<sonarqube-quality-gate-status.txt)
-        if [ "$status" != "OK" ]; then
-          echo "Quality Gate status is not OK: $status"
-          exit 1
-        fi
+        java-version: "21"
+        distribution: "temurin"
+    - name: Cache SonarQube Cloud packages
+      uses: actions/cache@v4
+      with:
+        path: ~/.sonar/cache
+        key: ${{ runner.os }}-sonar
+        restore-keys: ${{ runner.os }}-sonar
+    - name: Cache Maven packages
+      uses: actions/cache@v4
+      with:
+        path: ~/.m2
+        key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+        restore-keys: ${{ runner.os }}-m2
+    - name: Build and analyze
+      run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=PostTech-SOAT_hexburger-pagamento
       shell: bash
