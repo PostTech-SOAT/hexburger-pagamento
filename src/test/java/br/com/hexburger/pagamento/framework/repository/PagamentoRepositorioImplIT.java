@@ -71,11 +71,11 @@ class PagamentoRepositorioImplIT {
     @Test
     void deveAtualizarStatusPagamento() {
 
-        String idPagamento = "0a99fedc-1a33-46fe-908b-b4f73eb21ab9";
+        String idPedido = "8d09b842-55c3-4bae-a612-acd8ec5100d9";
 
-        pagamentoRepositorio.atualizarStatusPagamento(idPagamento, StatusPagamento.APROVADO);
+        pagamentoRepositorio.atualizarStatusPagamento(idPedido, StatusPagamento.APROVADO);
 
-        EPagamento pagamentoAtualizado = repository.findById(idPagamento).get();
+        EPagamento pagamentoAtualizado = repository.findByIdPedido(idPedido).get();
 
         assertThat(pagamentoAtualizado, is(notNullValue()));
         assertThat(pagamentoAtualizado.getStatus(), is(equalTo(StatusPagamento.APROVADO.name())));

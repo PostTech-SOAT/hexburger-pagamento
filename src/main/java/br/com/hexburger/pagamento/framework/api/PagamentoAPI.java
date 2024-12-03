@@ -24,12 +24,8 @@ public class PagamentoAPI {
     @PostMapping
     public ResponseEntity<Object> atualizarStatusDoPagamento(@RequestBody PagamentoDTO pagamentoDTO) {
         PagamentoController controller = new PagamentoController();
-        try {
-            controller.atualizarStatusDoPagamento(pagamentoDTO, pagamentoRepositorio, pagamentoSenderService);
-            return ResponseEntity.accepted().build();
-        } catch (NullPointerException | IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        controller.atualizarStatusDoPagamento(pagamentoDTO, pagamentoRepositorio, pagamentoSenderService);
+        return ResponseEntity.accepted().build();
     }
 
     @GetMapping("/{idPedido}/status")
