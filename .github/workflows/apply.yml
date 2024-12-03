@@ -8,7 +8,7 @@ on:
 env:
   aws_region: us-east-1
   terraform_version: 1.6.5
-  terraform_directory: ./infra/terraform
+  terraform_directory: ./terraform
   terragrunt_version: 0.67.10
   tfvars_file_name: deploy.hcl
   eks_cluster_name: hexburger-eks-cluster
