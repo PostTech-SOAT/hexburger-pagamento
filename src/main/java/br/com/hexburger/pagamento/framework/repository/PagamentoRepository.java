@@ -10,6 +10,8 @@ import java.util.Optional;
 @Repository
 public interface PagamentoRepository extends MongoRepository<EPagamento, String> {
 
+    Optional<EPagamento> findByIdPedido(String idPedido);
+
     @Query(value = "{ 'idPedido' : ?0 }", fields = "{ 'status' : 1, '_id' : 0 }")
     Optional<EPagamento> findStatusByIdPedido(String idPedido);
 

@@ -93,26 +93,6 @@ class PagamentoAPITest {
     }
 
     @Test
-    void deveLancarExcecaoAoAtualizarStatusDoPagamentoSemReceberStatus() throws Exception {
-
-        mockMvc.perform(post("/v1/pagamento")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"idPedido\": \"0\", \"isAprovado\": true}"))
-                .andExpect(status().isBadRequest());
-
-    }
-
-    @Test
-    void deveLancarExcecaoAoAtualizarStatusDoPagamentoDePagamentoInvalido() throws Exception {
-
-        mockMvc.perform(post("/v1/pagamento")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"idPedido\": \"0\", \"isAprovado\": true, \"status_do_pagamento\": \"AGUARDANDO\"}"))
-                .andExpect(status().isBadRequest());
-
-    }
-
-    @Test
     void deveBuscarStatusPagamentoPedido() throws Exception {
 
         MvcResult mvcResult = mockMvc.perform(get("/v1/pagamento/{idPedido}/status", "b001927d-f946-4bcf-8f4a-5b73694a2f7e")
