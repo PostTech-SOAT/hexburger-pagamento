@@ -194,7 +194,6 @@
 					</execution>
 				</executions>
 			</plugin>
-			<build>
 
  		   <plugin>
  		     <groupId>org.sonarsource</groupId>
